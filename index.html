@@ -161,7 +161,7 @@ footer{
 
     <form id="rsvpForm">
         <input type="text" id="name" placeholder="الاسم بالكامل" required>
-        <textarea type="text" id="note" placeholder="هنستنى دعواتكم الحلوة🫶🏻" required>
+        <textarea type="text" id="note" placeholder="هنستنى دعواتكم الحلوة" required>
 
         <button type="submit">إرسال التأكيد</button>
     </form>
@@ -197,8 +197,8 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
 
     var data = {
         name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        attendance: document.getElementById("attendance").value
+        
+        note: document.getElementById("note").value
     };
 
     fetch("PUT_YOUR_GOOGLE_SCRIPT_LINK_HERE", {
