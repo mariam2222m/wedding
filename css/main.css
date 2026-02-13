@@ -43,7 +43,7 @@ section{
     font-family:'Amiri', serif;
     font-size:24px;
     line-height:1.8;
-    margin-bottom:40px;
+    margin-bottom:30px;
 }
 
 .invite-text{
@@ -58,7 +58,7 @@ section{
 }
 
 .details{
-    font-size:24px;
+    font-size:20px;
     margin:10px 0;
 }
 
@@ -83,7 +83,7 @@ section{
 .countdown{
     font-size:24px;
     font-weight:bold;
-    margin-top:35px;
+    margin-top:15px;
 }
 
 form{
@@ -148,75 +148,27 @@ footer{
 }
 
 /* Centered small image for invitation */
-/* ===== Image Section (FARAWLA VERSION) ===== */
-
-.image-section {
-    padding: padding: 45px 20px 35px;
+.image-section .image-center{ text-align:center; }
+.image-section .center-img{
+    width:260px;
+    max-width:55%;
+    height:auto;
+    display:inline-block;
+    border-radius:12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(122, 92, 30, 0.2);
 }
-
-.image-section .image-center {
-    text-align: center;
-    position: relative;
-    display: inline-block;
-}
-
-/* Main Couple Image */
-.image-section .center-img {
-    width: 75%;
-    max-width: 650px;
-    height: auto;
-    display: inline-block;
-    cursor: pointer;
-    transition: all 0.35s ease;
-    box-shadow: 0 18px 45px rgba(122, 92, 30, 0.25);
-}
-
-/* Hover effect */
-.image-section .center-img:hover {
+.image-section .center-img:hover{
     transform: scale(1.04);
-    box-shadow: 0 25px 55px rgba(122, 92, 30, 0.35);
+    box-shadow: 0 12px 32px rgba(122, 92, 30, 0.35);
+}
+@media (max-width:480px){
+    .image-section .center-img{ width:180px; max-width:70%; }
 }
 
-/* Play Overlay */
-.play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 64px;
-    color: rgba(255,255,255,0.95);
-    text-shadow: 0 4px 12px rgba(0,0,0,0.7);
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    opacity: 0.95;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); opacity: 0.85; }
-}
-
-.play-overlay.hidden {
-    opacity: 0.001;
-    transform: scale(0.8);
-    animation: none;
-}
-
-.play-overlay.playing {
-    opacity: 0.9;
-    animation: none;
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-    .image-section .center-img {
-        width: 92%;
-        max-width: 100%;
-        border-radius: 16px;
-    }
-}
+/* Audio control styling */
+.audio-section .audio-controls{ max-width:420px; margin:12px auto; text-align:center; }
+.audio-section #audioStatus{ font-weight:700; color:#5a4a2a; margin-top:8px; }
 
 /* Clickable couple image overlay */
 .image-center{ position:relative; display:inline-block; }
