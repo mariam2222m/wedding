@@ -1,3 +1,14 @@
+// ===== Page enhancements =====
+document.addEventListener('DOMContentLoaded', function(){
+    // Stagger section animations
+    const sections = document.querySelectorAll('section');
+    sections.forEach((sec, idx) => {
+        sec.style.animationDelay = (idx * 0.1) + 's';
+    });
+    // Smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+});
+
 // ===== Countdown =====
 var weddingDate = new Date("March 23, 2026 13:30:00").getTime();
 
@@ -172,16 +183,16 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         });
 
         img.addEventListener('click', function(){
-            try{ audio.load(); }catch(e){}
-
             if(audio.paused){
                 audio.play().then(()=>{
+                    console.log('Play started');
                 }).catch(err=>{
                     setStatus('تعذر التشغيل — تحقق من ملف الصوت أو أذونات المتصفح');
                     console.error('Play failed', err);
                 });
             } else {
                 audio.pause();
+                console.log('Paused');
             }
         });
 
