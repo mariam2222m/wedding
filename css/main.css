@@ -8,11 +8,9 @@ body{
         linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.6)),
         url("../img/background01.jpg");
     background-repeat: repeat-x;
-    background-position: center;
+    background-position: center center;
     background-size: contain;
     background-attachment: fixed;
-    margin: 0;
-    padding: 0;
 }
 
 section{
