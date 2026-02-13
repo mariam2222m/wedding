@@ -16,8 +16,8 @@
 </head>
 
 <body>
-    <!-- Islamic Intro -->
-<section style="margin:0px;padding:0px">
+    <div id="home">
+<section id="Home" class="m-1">
     <div class="basmala" style="font-size: 50px;">بسم الله الرحمن الرحيم</div>
 
     <div class="ayah">
@@ -28,7 +28,7 @@
         نتشرف بدعوتكم لحضور عقد قراننا
     </div>
 
-    <div class="names" style="margin:10px;padding:0px">
+    <div class="names mt-1 p-0">
      أحمد ♥ مريم
     </div>
      <div class="doay">
@@ -37,7 +37,7 @@
 </section>
 
 <!-- Details -->
-<section style="margin:10px;padding:0px">
+<section class="m-0 p-0">
     <div class="details">📅 االإثنين 23 مارس 2026</div>
     <div class="details">⏰ االساعة الواحدة و نصف  ظهرًا</div>
     <div class="details">📍 مسجد المواساة – الإسكندرية</div>
@@ -48,19 +48,21 @@
 </section>
 
 <!-- Countdown -->
-<section>
+<section class="mt-1 mb-0 p-0">
     <h2>متبقي على عقد القران</h2>
     <div id="countdown" class="countdown"></div>
 </section>
 
 <!-- RSVP -->
-<section>
+<section class="m-0 p-0">
     <h2>تأكيد الحضور</h2>
 
  <form id="rsvpForm">
     <input type="text" id="name" name="name" placeholder="الاسم بالكامل" required>
     <textarea id="note" name="note" placeholder="🫶🏻هنستنى دعواتكم الحلوة🫶🏻" rows="4" required></textarea>
     <button type="submit">إرسال التأكيد</button>
+    <!-- inline message area for RSVP feedback (placed inside form so it appears directly under the submit button) -->
+    <div id="rsvpMessage" aria-live="polite"></div>
 </form>
 
 </section>
@@ -68,7 +70,7 @@
 <footer>
     بانتظاركم لمشاركتنا هذه المناسبة المباركة 💍
 </footer>
-
+</div>
     <!-- main js -->
     <script src="./js/main.js"></script>
     <!-- bootstrap js -->

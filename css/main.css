@@ -1,13 +1,22 @@
 body{
     margin:0;
+    padding: 0;
     font-family:'Cairo', sans-serif;
     text-align:center;
     color:#7a5c1e;
-    background:
-    linear-gradient(rgba(255,255,255,0.96), rgba(255,255,255,0.96)),
-    url("https://www.transparenttextures.com/patterns/arabesque.png");
-}
 
+}
+#home{
+    background-image:
+        linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.6)),
+        url("../img/background01.jpg");
+    background-repeat: repeat-x;
+    background-position: center;
+    background-size: contain; /* show whole image without cropping; may leave space */
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
 section{
     padding:60px 20px;
 }
@@ -97,6 +106,13 @@ button:hover{
 footer{
     padding:30px;
     font-size:18px;
+}
+
+/* RSVP message styling */
+#rsvpMessage{
+    margin-top:10px;
+    font-weight:700;
+    text-align:center;
 }
 
 @media(max-width:600px){
