@@ -43,7 +43,7 @@ section{
     font-family:'Amiri', serif;
     font-size:24px;
     line-height:1.8;
-    margin-bottom:30px;
+    margin-bottom:40px;
 }
 
 .invite-text{
@@ -83,7 +83,7 @@ section{
 .countdown{
     font-size:24px;
     font-weight:bold;
-    margin-top:15px;
+    margin-top:35px;
 }
 
 form{
