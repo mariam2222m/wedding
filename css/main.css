@@ -150,7 +150,7 @@ footer{
 /* Centered small image for invitation */
 .image-section .image-center{ text-align:center; }
 .image-section .center-img{
-    width:260px;
+    width:460px;
     max-width:55%;
     height:auto;
     display:inline-block;
