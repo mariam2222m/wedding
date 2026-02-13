@@ -134,36 +134,62 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         const status = document.getElementById('audioStatus');
         if(!audio || !img) return;
 
+        function setStatus(msg){ if(status) status.textContent = msg; }
+
         function updateOverlay(){
+            if(!overlay) return;
             if(audio.paused){
-                if(overlay) overlay.textContent = '▶';
-                if(overlay) overlay.classList.remove('playing');
+                overlay.textContent = '▶';
+                overlay.classList.remove('playing');
+                overlay.classList.remove('hidden');
             } else {
-                if(overlay) overlay.textContent = '⏸';
-                if(overlay) overlay.classList.add('playing');
+                overlay.textContent = '⏸';
+                overlay.classList.add('playing');
+                overlay.classList.remove('hidden');
             }
         }
 
+        // Helpful event handlers to surface what's happening
+        audio.addEventListener('play', function(){ setStatus('جاري التشغيل'); updateOverlay(); });
+        audio.addEventListener('pause', function(){ setStatus('متوقف'); updateOverlay(); });
+        audio.addEventListener('canplay', function(){ /* ready to play */ });
+        audio.addEventListener('loadeddata', function(){ /* loaded first frame */ });
+        audio.addEventListener('waiting', function(){ setStatus('تحميل...'); });
+        audio.addEventListener('stalled', function(){ setStatus('تعطل التحميل'); });
+        audio.addEventListener('error', function(e){
+            const err = audio.error;
+            let msg = 'خطأ في تحميل الملف';
+            if(err){
+                switch(err.code){
+                    case 1: msg = 'تم إلغاء تحميل الوسائط'; break;
+                    case 2: msg = 'خطأ في الشبكة أثناء التحميل'; break;
+                    case 3: msg = 'فشل فك ترميز الوسائط'; break;
+                    case 4: msg = 'المصدر غير متاح'; break;
+                    default: msg = 'خطأ غير معروف في التشغيل';
+                }
+            }
+            setStatus(msg + (err && err.message ? (': '+err.message) : ''));
+            console.error('Audio error', err, e);
+            if(overlay) overlay.classList.add('hidden');
+        });
+
         img.addEventListener('click', function(){
+            // ensure audio is loaded/attempt load
+            try{ audio.load(); }catch(e){}
+
             if(audio.paused){
                 audio.play().then(()=>{
-                    if(status) status.textContent = 'جاري التشغيل';
-                    updateOverlay();
+                    // play started
                 }).catch(err=>{
-                    if(status) status.textContent = 'تعذر التشغيل — تحقق من ملف الصوت أو أذونات المتصفح';
-                    console.error(err);
+                    setStatus('تعذر التشغيل — تحقق من ملف الصوت أو أذونات المتصفح');
+                    console.error('Play failed', err);
                 });
             } else {
                 audio.pause();
-                if(status) status.textContent = 'متوقف';
-                updateOverlay();
             }
         });
 
-        audio.addEventListener('ended', function(){
-            if(status) status.textContent = 'انتهى المقطع';
-            updateOverlay();
-        });
+        audio.addEventListener('ended', function(){ setStatus('انتهى المقطع'); updateOverlay(); });
 
         // initialize overlay state
         updateOverlay();

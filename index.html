@@ -41,6 +41,11 @@
         <span class="play-overlay" id="playOverlay" aria-hidden="true">▶</span>
     </div>
 </section>
+<!-- Hidden audio element and status (required by scripts) -->
+<div style="display:none">
+    <audio id="invAudio" src="./img/PUPNxMONC00.mp3" preload="none"></audio>
+</div>
+<div id="audioStatus" aria-live="polite" style="text-align:center; margin-top:8px; color:#5a4a2a; font-weight:700;"></div>
 <!-- Details -->
 <section class="m-0 p-1">
     <div class="details">📅 االإثنين 23 مارس 2026</div>
@@ -56,16 +61,6 @@
 <section class="mt-1 mb-0 p-0">
     <h2>متبقي على عقد القران</h2>
     <div id="countdown" class="countdown"></div>
-</section>
-
-<!-- Audio player (triggered by clicking the couple image) -->
-<section class="m-0 p-0 audio-section">
-    <h2>تشغيل مقطع صوتي</h2>
-    <div class="audio-controls">
-        <div id="audioHint">اضغط على الصورة لتشغيل الموسيقى</div>
-        <div id="audioStatus" aria-live="polite" style="margin-top:8px;"></div>
-        <audio id="invAudio" src="./img/PUPNxMONC00.mp3" preload="none"></audio>
-    </div>
 </section>
 
 <!-- RSVP -->
