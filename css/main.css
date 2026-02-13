@@ -1,18 +1,24 @@
+html, body {
+    height: 100%;
+}
+
 body{
     margin:0;
     padding: 0;
     font-family:'Cairo', sans-serif;
     text-align:center;
     color:#7a5c1e;
- background-image:
+    min-height: 100vh;
+}
+#main{
+    background-image:
         linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.6)),
         url("../img/background01.jpg");
     background-repeat: repeat-x;
     background-position: center center;
     background-size: contain;
-    background-attachment: fixed;
+    background-attachment: fixed; 
 }
-
 section{
     padding:60px 20px;
 }
