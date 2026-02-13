@@ -92,7 +92,7 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
     alert('no data');
 });
 
-    // ===== Audio play/pause button for bundled mp3 =====
+
     document.addEventListener('DOMContentLoaded', function(){
         const audio = document.getElementById('invAudio');
         const btn = document.getElementById('playAudio');
@@ -126,7 +126,6 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         });
     });
 
-    // ===== Also allow clicking the couple image to toggle audio =====
     document.addEventListener('DOMContentLoaded', function(){
         const audio = document.getElementById('invAudio');
         const img = document.getElementById('coupleImage');
@@ -149,11 +148,10 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
             }
         }
 
-        // Helpful event handlers to surface what's happening
         audio.addEventListener('play', function(){ setStatus('جاري التشغيل'); updateOverlay(); });
         audio.addEventListener('pause', function(){ setStatus('متوقف'); updateOverlay(); });
-        audio.addEventListener('canplay', function(){ /* ready to play */ });
-        audio.addEventListener('loadeddata', function(){ /* loaded first frame */ });
+        audio.addEventListener('canplay', function(){ });
+        audio.addEventListener('loadeddata', function(){ });
         audio.addEventListener('waiting', function(){ setStatus('تحميل...'); });
         audio.addEventListener('stalled', function(){ setStatus('تعطل التحميل'); });
         audio.addEventListener('error', function(e){
@@ -174,12 +172,10 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         });
 
         img.addEventListener('click', function(){
-            // ensure audio is loaded/attempt load
             try{ audio.load(); }catch(e){}
 
             if(audio.paused){
                 audio.play().then(()=>{
-                    // play started
                 }).catch(err=>{
                     setStatus('تعذر التشغيل — تحقق من ملف الصوت أو أذونات المتصفح');
                     console.error('Play failed', err);
@@ -191,6 +187,5 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
 
         audio.addEventListener('ended', function(){ setStatus('انتهى المقطع'); updateOverlay(); });
 
-        // initialize overlay state
         updateOverlay();
     });
