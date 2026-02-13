@@ -17,8 +17,8 @@
 
 <body>
     <div id="main" >
-<section  class="m-1">
-    <div class="basmala" style="font-size: 35px;">بسم الله الرحمن الرحيم</div>
+<section  class="mt-1 mb-0 pb-0">
+    <div class="basmala" style="font-size: 50px;">بسم الله الرحمن الرحيم</div>
 
     <div class="ayah">
         ﴿ وَمِنْ ءَايَـٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِى ذَٰلِكَ لَـَٔايَـٰتٍ لِّقَوْمٍ يَتَفَكَّرُونَ﴾
@@ -35,14 +35,19 @@
         اللَّهُمَّ بَارِكْ لَهُمَا، وَبَارِك عَلَيْهِمَا، وَأَجْمَع بَيْنَهُمَا فِي خَيْرٍ
     </div>
 </section>
-
+<section class="image-section m-0 p-0">
+    <div class="image-center m-0 p-0">
+        <img id="coupleImage" src="./img/couble2.png" alt="أحمد ومريم" class="center-img" role="button" aria-label="تشغيل الموسيقى">
+        <span class="play-overlay" id="playOverlay" aria-hidden="true">▶</span>
+    </div>
+</section>
 <!-- Details -->
 <section class="m-0 p-20">
     <div class="details">📅 االإثنين 23 مارس 2026</div>
     <div class="details">⏰ االساعة الواحدة و نصف  ظهرًا</div>
     <div class="details">📍 مسجد المواساة – الإسكندرية</div>
 
-    <a class="button" href="https://maps.app.goo.gl/rB2n3jWim6k916qQA" target="_blank">
+    <a class="button play-sound" href="https://maps.app.goo.gl/rB2n3jWim6k916qQA" target="_blank">
         عرض الموقع على الخريطة
     </a>
 </section>
@@ -51,6 +56,16 @@
 <section class="mt-1 mb-0 p-0">
     <h2>متبقي على عقد القران</h2>
     <div id="countdown" class="countdown"></div>
+</section>
+
+<!-- Audio player (triggered by clicking the couple image) -->
+<section class="m-0 p-0 audio-section">
+    <h2>تشغيل مقطع صوتي</h2>
+    <div class="audio-controls">
+        <div id="audioHint">اضغط على الصورة لتشغيل الموسيقى</div>
+        <div id="audioStatus" aria-live="polite" style="margin-top:8px;"></div>
+        <audio id="invAudio" src="./img/PUPNxMONC00.mp3" preload="none"></audio>
+    </div>
 </section>
 
 <!-- RSVP -->

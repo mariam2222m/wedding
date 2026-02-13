@@ -91,3 +91,80 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
 
     alert('no data');
 });
+
+    // ===== Audio play/pause button for bundled mp3 =====
+    document.addEventListener('DOMContentLoaded', function(){
+        const audio = document.getElementById('invAudio');
+        const btn = document.getElementById('playAudio');
+        const status = document.getElementById('audioStatus');
+        if(!audio || !btn) return;
+
+        function updateButton(){
+            if(audio.paused) btn.textContent = '▶ تشغيل الموسيقى';
+            else btn.textContent = '⏸ إيقاف';
+        }
+
+        btn.addEventListener('click', function(){
+            if(audio.paused){
+                audio.play().then(()=>{
+                    status.textContent = 'جاري التشغيل';
+                    updateButton();
+                }).catch(err=>{
+                    status.textContent = 'تعذر التشغيل — تحقق من ملف الصوت أو أذونات المتصفح';
+                    console.error(err);
+                });
+            } else {
+                audio.pause();
+                status.textContent = 'متوقف';
+                updateButton();
+            }
+        });
+
+        audio.addEventListener('ended', function(){
+            status.textContent = 'انتهى المقطع';
+            updateButton();
+        });
+    });
+
+    // ===== Also allow clicking the couple image to toggle audio =====
+    document.addEventListener('DOMContentLoaded', function(){
+        const audio = document.getElementById('invAudio');
+        const img = document.getElementById('coupleImage');
+        const overlay = document.getElementById('playOverlay');
+        const status = document.getElementById('audioStatus');
+        if(!audio || !img) return;
+
+        function updateOverlay(){
+            if(audio.paused){
+                if(overlay) overlay.textContent = '▶';
+                if(overlay) overlay.classList.remove('playing');
+            } else {
+                if(overlay) overlay.textContent = '⏸';
+                if(overlay) overlay.classList.add('playing');
+            }
+        }
+
+        img.addEventListener('click', function(){
+            if(audio.paused){
+                audio.play().then(()=>{
+                    if(status) status.textContent = 'جاري التشغيل';
+                    updateOverlay();
+                }).catch(err=>{
+                    if(status) status.textContent = 'تعذر التشغيل — تحقق من ملف الصوت أو أذونات المتصفح';
+                    console.error(err);
+                });
+            } else {
+                audio.pause();
+                if(status) status.textContent = 'متوقف';
+                updateOverlay();
+            }
+        });
+
+        audio.addEventListener('ended', function(){
+            if(status) status.textContent = 'انتهى المقطع';
+            updateOverlay();
+        });
+
+        // initialize overlay state
+        updateOverlay();
+    });
