@@ -62,13 +62,14 @@ section{
 }
 
 .ornament-top, .ornament-bottom {
-    font-size:20px;
+    font-size:24px;
     color:#a58545;
-    letter-spacing:8px;
+    letter-spacing:10px;
     margin:10px 0px 0px;
-    padding: 0px;
+    padding:0px;
     font-weight:bold;
 }
+
 
 .ornament-middle {
     height:2px;
@@ -99,9 +100,9 @@ section{
     font-size:42px;
     display:inline-block;
     animation:heartBeat 1.4s ease-in-out infinite;
-background: linear-gradient(45deg, #b8860b, #d4af37);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+    background: linear-gradient(45deg, #463c23, #f6e8ba);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 @keyframes heartBeat {
     0%, 100% { transform:scale(1); }
