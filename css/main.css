@@ -95,12 +95,14 @@ section{
 .heart {
     color:#c41e3a;
     font-size:42px;
-    animation:heartBeat 1.4s infinite;
+    display:inline-block;
+    animation:heartBeat 1.4s ease-in-out infinite;
 }
 @keyframes heartBeat {
     0%, 100% { transform:scale(1); }
     25% { transform:scale(1.1); }
     50% { transform:scale(1); }
+    75% { transform:scale(1.1); }
 }
 
 .details{
