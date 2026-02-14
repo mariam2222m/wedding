@@ -100,7 +100,7 @@ section{
     font-size:42px;
     display:inline-block;
     animation:heartBeat 1.4s ease-in-out infinite;
-    background: linear-gradient(45deg, #463c23, #f6e8ba);
+    background: linear-gradient(45deg, #9d9685, #995b5b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
