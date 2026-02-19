@@ -48,6 +48,7 @@
         <img id="coupleImage" src="./img/couble2.png" alt="أحمد ومريم" class="center-img" role="button" aria-label="تشغيل الموسيقى">
         <span class="play-overlay" id="playOverlay" aria-hidden="true">▶</span>
     </div>
+    <button id="playAudio" class="btn btn-primary mt-3" style="background-color: #5a4a2a; border-color: #5a4a2a; width: 200px; margin: 0 auto; display: block;">▶ تشغيل</button>
 </section>
 <div style="display:none">
     <audio id="invAudio" src="./audio/PUPNxMONC00.mp3" preload="none"></audio>
@@ -78,10 +79,36 @@
     <input type="text" id="name" name="name" placeholder="الاسم بالكامل" required>
     <textarea id="note" name="note" placeholder="دعوتكم الحلوة🫶🏻" rows="3" required></textarea>
     <button type="submit">إرسال التأكيد</button>
+    <button type="button" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#rsvpModal">عرض التأكيدات</button>
     <div id="rsvpMessage" aria-live="polite"></div>
 </form>
 
 </section>
+
+<!-- RSVP Modal -->
+<div class="modal fade" id="rsvpModal" tabindex="-1" aria-labelledby="rsvpModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" style="background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(250,248,240,0.98) 100%); border: none; border-radius: 20px; box-shadow: 0 20px 60px rgba(122, 92, 30, 0.3);">
+      <div class="modal-header" style="background: linear-gradient(45deg, #7a5c1e, #d4af37); color: white; border: none; border-radius: 20px 20px 0 0; padding: 20px;">
+        <h4 class="modal-title" id="rsvpModalLabel" style="font-weight: 600; text-align: center; width: 100%;">💍 التأكيدات المرسلة 💍</h4>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding: 30px;">
+        <div id="rsvpCards" class="row">
+          <!-- Cards will be populated by JS -->
+        </div>
+        <nav aria-label="RSVP Pagination" class="mt-4">
+          <ul class="pagination justify-content-center" id="rsvpPagination" style="gap: 5px;">
+            <!-- Pagination will be populated by JS -->
+          </ul>
+        </nav>
+      </div>
+      <div class="modal-footer" style="border: none; background: rgba(122, 92, 30, 0.05); border-radius: 0 0 20px 20px; padding: 15px;">
+        <button type="button" class="btn" data-bs-dismiss="modal" style="background: linear-gradient(45deg, #7a5c1e, #d4af37); color: white; border: none; border-radius: 25px; padding: 8px 25px; font-weight: 500;">إغلاق</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <footer class="fw-bold">
     بانتظاركم لمشاركتنا هذه المناسبة المباركة 💍

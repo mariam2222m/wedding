@@ -28,7 +28,7 @@ setInterval(function(){
     }
 },1000);
 
-const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSe1K9Bzsk2M7RPp6Jvem5zb9MxRJAHvYtObqm-ZWH0zF9IAzQ/formResponse";
+const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/1aJNQXgGpajYkU5H-fCQ_bRgkKDcQVRwCJfzho_EGyB8/formResponse";
 const GOOGLE_FORM_FIELDS = {
     name: "entry.1930424625",
     note: "entry.927098666",
@@ -87,6 +87,7 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         const formData = new URLSearchParams();
         formData.append(GOOGLE_FORM_FIELDS.name, name);
         formData.append(GOOGLE_FORM_FIELDS.note, note);
+        formData.append(GOOGLE_FORM_FIELDS.canDisplay, canDisplay);
 
         fetch(GOOGLE_FORM_ACTION, {
             method: 'POST',
@@ -94,7 +95,10 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formData.toString()
         })
-        .then(()=> showMessage(true))
+        .then(()=> {
+            showMessage(true);
+            storeRSVP(name, note, canDisplay);
+        })
         .catch(()=> showMessage(false));
 
         return;
@@ -102,6 +106,13 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
 
     alert('no data');
 });
+
+// Function to store RSVP in localStorage
+function storeRSVP(name, note, canDisplay) {
+    const rsvps = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
+    rsvps.push({ name, note, canDisplay, timestamp: new Date().toISOString() });
+    localStorage.setItem('weddingRSVPs', JSON.stringify(rsvps));
+}
 
 
     document.addEventListener('DOMContentLoaded', function(){
@@ -200,3 +211,144 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
 
         updateOverlay();
     });
+
+// ===== RSVP Modal with Pagination =====
+document.addEventListener('DOMContentLoaded', function(){
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1rM0vFiwY0NBeETpc5VkNmxHfnzncrAvwy5M6dzFG_Ug/export?format=csv&gid=168002164';
+
+    let rsvps = [];
+    let currentPage = 1;
+    const cardsPerPage = 4;
+
+    function fetchRSVPs() {
+        return fetch(SHEET_CSV_URL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sheet: ' + response.status);
+                }
+                return response.text();
+            })
+            .then(csv => {
+                const lines = csv.split('\n');
+                rsvps = [];
+                for (let i = 1; i < lines.length; i++) { // Skip header
+                    const cols = parseCSVLine(lines[i]);
+                    if (cols.length >= 4) {
+                        const canDisplay = cols[3].trim();
+                        if (canDisplay === 'Yes') {
+                            rsvps.push({
+                                timestamp: cols[0].trim(),
+                                name: cols[1].trim(),
+                                note: cols[2].trim(),
+                                canDisplay: canDisplay
+                            });
+                        }
+                    }
+                }
+                return rsvps;
+            })
+            .catch(error => {
+                console.error('Error fetching RSVPs:', error);
+                // Show error in modal
+                document.getElementById('rsvpCards').innerHTML = '<div class="col-12 text-center"><p>خطأ في تحميل البيانات. تأكد من نشر الجدول علنًا.</p></div>';
+                return [];
+            });
+    }
+
+    // Simple CSV line parser that handles quoted fields
+    function parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+                if (inQuotes && line[i + 1] === '"') {
+                    current += '"';
+                    i++; // Skip next quote
+                } else {
+                    inQuotes = !inQuotes;
+                }
+            } else if (char === ',' && !inQuotes) {
+                result.push(current);
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        result.push(current);
+        return result;
+    }
+
+    function renderCards(page) {
+        const totalPages = Math.ceil(rsvps.length / cardsPerPage);
+        if (page > totalPages) currentPage = totalPages || 1;
+
+        const start = (page - 1) * cardsPerPage;
+        const end = start + cardsPerPage;
+        const cards = rsvps.slice(start, end);
+
+        const cardsContainer = document.getElementById('rsvpCards');
+        cardsContainer.innerHTML = '';
+
+        if (rsvps.length === 0) {
+            cardsContainer.innerHTML = '<div class="col-12 text-center"><p>لا توجد تأكيدات حتى الآن</p></div>';
+            document.getElementById('rsvpPagination').innerHTML = '';
+            return;
+        }
+
+        cards.forEach(rsvp => {
+            const card = document.createElement('div');
+            card.className = 'col-md-6 mb-3';
+            card.innerHTML = `
+                <div class="card h-100 shadow-sm border-0" style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,248,240,0.95) 100%); border-radius: 15px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(122, 92, 30, 0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(122, 92, 30, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(122, 92, 30, 0.1)';">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-3">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #7a5c1e, #d4af37); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 20px; margin-bottom: 10px;">
+                                👤
+                            </div>
+                        </div>
+                        <h5 class="card-title text-center mb-2" style="color: #7a5c1e; font-weight: 600; font-size: 1.1rem;">${rsvp.name}</h5>
+                        <p class="card-text text-center" style="color: #5a4a2a; font-size: 0.9rem; line-height: 1.5;">"${rsvp.note}"</p>
+                    </div>
+                </div>
+            `;
+            cardsContainer.appendChild(card);
+        });
+
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const totalPages = Math.ceil(rsvps.length / cardsPerPage);
+        const pagination = document.getElementById('rsvpPagination');
+        pagination.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+            li.innerHTML = `<a class="page-link" href="#" style="color: #7a5c1e; border-color: #d4af37; background: ${i === currentPage ? 'linear-gradient(45deg, #7a5c1e, #d4af37)' : 'white'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 2px; transition: all 0.2s ease;">${i}</a>`;
+            li.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = i;
+                renderCards(currentPage);
+            });
+            pagination.appendChild(li);
+        }
+    }
+
+    // Initialize modal content when modal is shown
+    const modal = document.getElementById('rsvpModal');
+    modal.addEventListener('show.bs.modal', function() {
+        // Show loading
+        document.getElementById('rsvpCards').innerHTML = '<div class="col-12 text-center"><p>جاري التحميل...</p></div>';
+        document.getElementById('rsvpPagination').innerHTML = '';
+
+        fetchRSVPs().then(() => {
+            currentPage = 1;
+            renderCards(currentPage);
+        });
+    });
+});
