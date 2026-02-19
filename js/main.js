@@ -87,7 +87,6 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         const formData = new URLSearchParams();
         formData.append(GOOGLE_FORM_FIELDS.name, name);
         formData.append(GOOGLE_FORM_FIELDS.note, note);
-        formData.append(GOOGLE_FORM_FIELDS.canDisplay, canDisplay);
 
         fetch(GOOGLE_FORM_ACTION, {
             method: 'POST',
@@ -97,7 +96,7 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         })
         .then(()=> {
             showMessage(true);
-            storeRSVP(name, note, canDisplay);
+            storeRSVP(name, note);
         })
         .catch(()=> showMessage(false));
 
