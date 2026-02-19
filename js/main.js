@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     const cols = parseCSVLine(lines[i]);
                     if (cols.length >= 4) {
                         const canDisplay = cols[3].trim();
-                        if (canDisplay === 'Yes') {
+                        if (canDisplay === 'Yes' || canDisplay === '') {
                             rsvps.push({
                                 timestamp: cols[0].trim(),
                                 name: cols[1].trim(),
