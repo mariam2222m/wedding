@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function(){
             card.className = 'col-md-6 mb-3';
             card.innerHTML = `
                 <div class="card h-100 shadow-sm border-0" style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,248,240,0.95) 100%); border-radius: 15px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(122, 92, 30, 0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(122, 92, 30, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(122, 92, 30, 0.1)';">
-                    <div class="card-body p-4">
+                    <div class="card-body p-4"> 
                         <h5 class="card-title text-center mb-2" style="color: #7a5c1e; font-weight: 600; font-size: 1.1rem;">${rsvp.name}</h5>
                         <p class="card-text text-center" style="color: #5a4a2a; font-size: 0.9rem; line-height: 1.5;">"${rsvp.note}"</p>
                     </div>
