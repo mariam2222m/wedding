@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 // ===== Countdown =====
-var weddingDate = new Date("March 23, 2026 13:30:00").getTime();
+var weddingDate = new Date("March 23, 2026 15:00:00").getTime();
 
 setInterval(function(){
     var now = new Date().getTime();
