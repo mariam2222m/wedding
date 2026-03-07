@@ -32,12 +32,14 @@ const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/1aJNQXgGpajYkU5H-fCQ
 const GOOGLE_FORM_FIELDS = {
     name: "entry.1930424625",
     note: "entry.927098666",
+    canDisplay: "entry.YOUR_CAN_DISPLAY_ENTRY_ID" // Replace with actual entry ID from Google Form
 };
 
 const GOOGLE_APPSCRIPT_URL = ""; 
 
 function showMessage(success){
     var msgEl = document.getElementById('rsvpMessage');
+    var form = document.getElementById('rsvpForm');
     if(success) {
         console.log('RSVP submission: success (opaque/no-cors)');
         if(msgEl) {
@@ -47,8 +49,15 @@ function showMessage(success){
             alert('تم تسجيل حضورك بنجاح 💕');
         }
     
-        var form = document.getElementById("rsvpForm");
-        if(form) form.reset();
+        // Hide form inputs and submit button, keep only view button
+        if(form) {
+            var inputs = form.querySelectorAll('input, textarea, button[type="submit"]');
+            inputs.forEach(function(input) {
+                input.style.display = 'none';
+            });
+            var h2 = form.querySelector('h2');
+            if(h2) h2.style.display = 'none';
+        }
     } else {
         console.error('RSVP submission: error');
         if(msgEl) {
@@ -64,13 +73,14 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
     e.preventDefault();
 
     const name = document.getElementById("name").value;
-    const note = document.getElementById("note").value;
+    const note = document.getElementById("note").value.replace(/\r?\n/g, ' ');
+    const canDisplay = "Yes";
 
     if(GOOGLE_APPSCRIPT_URL){
         fetch(GOOGLE_APPSCRIPT_URL, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, note, timestamp: new Date().toISOString() })
+            body: JSON.stringify({ name, note, canDisplay, timestamp: new Date().toISOString() })
         })
         .then(res => {
             if(res.ok) showMessage(true);
@@ -82,11 +92,12 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
     }
 
 
-    if(GOOGLE_FORM_ACTION && GOOGLE_FORM_FIELDS.name && GOOGLE_FORM_FIELDS.note){
+    if(GOOGLE_FORM_ACTION && GOOGLE_FORM_FIELDS.name && GOOGLE_FORM_FIELDS.note && GOOGLE_FORM_FIELDS.canDisplay){
 
         const formData = new URLSearchParams();
         formData.append(GOOGLE_FORM_FIELDS.name, name);
         formData.append(GOOGLE_FORM_FIELDS.note, note);
+        formData.append(GOOGLE_FORM_FIELDS.canDisplay, canDisplay);
 
         fetch(GOOGLE_FORM_ACTION, {
             method: 'POST',
@@ -96,7 +107,7 @@ document.getElementById("rsvpForm").addEventListener("submit", function(e){
         })
         .then(()=> {
             showMessage(true);
-            storeRSVP(name, note);
+            storeRSVP(name, note, canDisplay);
         })
         .catch(()=> showMessage(false));
 
@@ -230,16 +241,16 @@ document.addEventListener('DOMContentLoaded', function(){
             .then(csv => {
                 const lines = csv.split('\n');
                 rsvps = [];
-                for (let i = 1; i < lines.length; i++) { // Skip header
+                for (let i = 1; i < lines.length; i++) {
                     const cols = parseCSVLine(lines[i]);
-                    if (cols.length >= 4) {
-                        const canDisplay = cols[3].trim();
-                        if (canDisplay === 'Yes' || canDisplay === '') {
+                    if (cols.length >= 3) {
+                        const canDisplayValue = cols[3] ? cols[3].trim() : 'Yes';
+                        if (canDisplayValue === 'Yes' || canDisplayValue === '' || canDisplayValue === 'yes') {
                             rsvps.push({
                                 timestamp: cols[0].trim(),
                                 name: cols[1].trim(),
-                                note: cols[2].trim(),
-                                canDisplay: canDisplay
+                                note: cols[2],
+                                canDisplay: 'Yes'
                             });
                         }
                     }
@@ -299,11 +310,12 @@ document.addEventListener('DOMContentLoaded', function(){
         cards.forEach(rsvp => {
             const card = document.createElement('div');
             card.className = 'col-md-6 mb-3';
+            const formattedNote = rsvp.note.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
             card.innerHTML = `
                 <div class="card h-100 shadow-sm border-0" style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,248,240,0.95) 100%); border-radius: 15px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(122, 92, 30, 0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(122, 92, 30, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(122, 92, 30, 0.1)';">
                     <div class="card-body p-4"> 
                         <h5 class="card-title text-center mb-2" style="color: #7a5c1e; font-weight: 600; font-size: 1.1rem;">${rsvp.name}</h5>
-                        <p class="card-text text-center" style="color: #5a4a2a; font-size: 0.9rem; line-height: 1.5;">"${rsvp.note}"</p>
+                        <p class="card-text text-center" style="color: #5a4a2a; font-size: 0.9rem; line-height: 1.5;">"${formattedNote}"</p>
                     </div>
                 </div>
             `;
@@ -320,16 +332,59 @@ document.addEventListener('DOMContentLoaded', function(){
 
         if (totalPages <= 1) return;
 
-        for (let i = 1; i <= totalPages; i++) {
+        // Helper to create a page item
+        function createPageItem(page, text = page, isActive = false, isDisabled = false) {
             const li = document.createElement('li');
-            li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-            li.innerHTML = `<a class="page-link" href="#" style="color: #7a5c1e; border-color: #d4af37; background: ${i === currentPage ? 'linear-gradient(45deg, #7a5c1e, #d4af37)' : 'white'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 2px; transition: all 0.2s ease;">${i}</a>`;
-            li.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentPage = i;
-                renderCards(currentPage);
-            });
-            pagination.appendChild(li);
+            li.className = `page-item ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}`;
+            li.innerHTML = `<a class="page-link" href="#" style="color: #7a5c1e; border-color: #d4af37; background: ${isActive ? 'linear-gradient(45deg, #7a5c1e, #d4af37)' : 'white'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 2px; transition: all 0.2s ease;">${text}</a>`;
+            if (!isDisabled) {
+                li.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentPage = page;
+                    renderCards(currentPage);
+                });
+            }
+            return li;
+        }
+
+        // If 3 or fewer pages, show all
+        if (totalPages <= 3) {
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.appendChild(createPageItem(i, i, i === currentPage));
+            }
+            return;
+        }
+
+        // More than 3 pages: smart pagination
+        // Always show first page
+        pagination.appendChild(createPageItem(1, 1, currentPage === 1));
+
+        // If current page is far from start, show ellipsis
+        if (currentPage > 3) {
+            const ellipsis = document.createElement('li');
+            ellipsis.className = 'page-item disabled';
+            ellipsis.innerHTML = '<span class="page-link" style="border: none; background: transparent; color: #7a5c1e;">...</span>';
+            pagination.appendChild(ellipsis);
+        }
+
+        // Show pages around current
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+        for (let i = start; i <= end; i++) {
+            pagination.appendChild(createPageItem(i, i, i === currentPage));
+        }
+
+        // If current page is far from end, show ellipsis
+        if (currentPage < totalPages - 2) {
+            const ellipsis = document.createElement('li');
+            ellipsis.className = 'page-item disabled';
+            ellipsis.innerHTML = '<span class="page-link" style="border: none; background: transparent; color: #7a5c1e;">...</span>';
+            pagination.appendChild(ellipsis);
+        }
+
+        // Always show last page (if not already shown)
+        if (totalPages > 1) {
+            pagination.appendChild(createPageItem(totalPages, totalPages, currentPage === totalPages));
         }
     }
 
